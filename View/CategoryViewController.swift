@@ -1,6 +1,7 @@
 //
 //  CategoryViewController.swift
 //  AppyStoreBLZ
+
 //
 //  Created by BridgeIt on 04/08/16.
 //  Copyright © 2016 bridgelabz. All rights reserved.
@@ -16,37 +17,42 @@ import AlamofireImage
 class CategoryViewController: UIViewController,UICollectionViewDataSource,UICollectionViewDelegate {
     
     @IBOutlet weak var mHomeButton: UIButton!
-    
     @IBOutlet weak var mVideoButton: UIButton!
-    
     @IBOutlet weak var mHistoryButton: UIButton!
-    
     @IBOutlet weak var mSearchButton: UIButton!
-
     @IBOutlet weak var mCartButton: UIButton!
     @IBOutlet weak var collectionView: UICollectionView!
     
     var mCategoryViewModelObj : CategoryViewModel!
-    var queue = NSOperationQueue()
+    var collectionViewCell : CollectionViewCell?
+    var mSelectedCategory : categorylist!
     
     override func viewDidLoad() {
         mChangeButtonImage()
         collectionView.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundimage")!)
         self.view.backgroundColor = UIColor(patternImage: UIImage(named: "backgroundimage")!)
-
+        
+        populateCategory(1, range: 10)
         
         collectionView.registerNib(UINib(nibName: "CollectionViewCell", bundle: nil), forCellWithReuseIdentifier: "CollectionViewCell")
         super.viewDidLoad()
         collectionView.collectionViewLayout = CustomViewFlowLayout(width : CGRectGetWidth(self.view.frame) , height : CGRectGetHeight(self.view.frame))
         mCategoryViewModelObj = CategoryViewModel()
-        
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CategoryViewController.updateViewController(_:)), name: "CategoryViewControllerUpdate", object: nil)
-        
+
     }
 
-    override func didReceiveMemoryWarning() {
+    override func didReceiveMemoryWarning()
+    {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    //FIXME: populate category
+    func populateCategory(start : Int,range : Int)
+    {
+        mCategoryViewModelObj = CategoryViewModel()
+        mCategoryViewModelObj.mFetchCategoryDetailsFromController(start, range: range)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(CategoryViewController.updateViewController(_:)), name: "CategoryViewControllerUpdate", object: nil)
     }
     
     func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int {
@@ -54,31 +60,25 @@ class CategoryViewController: UIViewController,UICollectionViewDataSource,UIColl
     }
     
     func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return mCategoryViewModelObj.mCategoryList.count
+        return mCategoryViewModelObj.mTotalCount
     }
-    
+    //TODO:Update me
     func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath) as! CollectionViewCell
+        //fetch category details
+        let category : categorylist? = mCategoryViewModelObj.mGetCategoryDetails(indexPath.row)
         
-        
-        mCategoryViewModelObj.mCategoryList[indexPath.row].name.bindTo(cell.VideoLabel)
-        
-        Alamofire.request(.GET, mCategoryViewModelObj.mCategoryList[indexPath.row].image)
-            .responseImage { response in
-                if let image = response.result.value {
-                    cell.VideoImageView.image = image
-                }
+        let cell = collectionView.cellForItemAtIndexPath(indexPath)
+        if cell == nil {
+            collectionViewCell = collectionView.dequeueReusableCellWithReuseIdentifier("CollectionViewCell", forIndexPath: indexPath) as? CollectionViewCell
+            mBindTo(collectionViewCell!, list: category!)
         }
-        
-        
-        return cell
+        return collectionViewCell!
     }
     
-   
     func updateViewController(notification : NSNotification) {
         collectionView.reloadData()
     }
-    
+    //FIXME:fdgfdrd
     func mChangeButtonImage() {
         mHomeButton.setImage(UIImage(named: "ladyimage"), forState: UIControlState.Normal)
         mVideoButton.setImage(UIImage(named: "videoimage"), forState: UIControlState.Normal)
@@ -87,8 +87,23 @@ class CategoryViewController: UIViewController,UICollectionViewDataSource,UIColl
         mCartButton.setImage(UIImage(named: "carimage"), forState: UIControlState.Normal)
     }
     
+    func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
+        mSelectedCategory = mCategoryViewModelObj.mCategoryList[indexPath.row]
+        performSegueWithIdentifier("CategoryToSubCategory", sender: nil)
+    }
     
-
-
-
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        if segue.identifier == "CategoryToSubCategory" {
+            let subCategoryViewControllerObj = segue.destinationViewController as! SubCategoryViewContoller
+            subCategoryViewControllerObj.mCategory = mSelectedCategory
+        }
+    }
+    
+    func mBindTo(cell : CollectionViewCell , list : categorylist) {
+        list.name.bindTo(cell.VideoLabel)
+        let image : ObservableBuffer<UIImage>? = Utility().fetchImage(list.image).shareNext()
+        if image != nil {
+            image?.bindTo(cell.VideoImageView)
+        }
+    }
 }

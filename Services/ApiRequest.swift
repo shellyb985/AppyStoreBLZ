@@ -31,15 +31,39 @@ class ApiRequest: NSObject {
                 let APIresponseObj = APIResponse()
                 APIresponseObj.mParseCategoryDetails(response.result.value as! [String : AnyObject])
         }
-        
     }
     
-    func mFetchSubCategoryList() {
-        Alamofire.request(.GET, "http://beta.appystore.in/appy_app/appyApi_handler.php?method=getContentList&content_type=videos&limit=5&offset=0&catid=175&pcatid=174&age=1.5&incl_age=5", headers: header)
+    //method to fetch sub category list
+    func mFetchSubCategoryList(c_Id : Int,p_Id : Int,offset : Int) {
+      
+        Alamofire.request(.GET, "http://beta.appystore.in/appy_app/appyApi_handler.php?method=getContentList&content_type=videos&limit=8&offset=\(offset)&catid=\(c_Id)&pcatid=\(p_Id)&age=1.5&incl_age=5", headers: header)
             .responseJSON { response in
+                if(response.result.value != nil)
                 
-                let APIresponseObj = APIResponse()
-                APIresponseObj.mParseSubCategoryDetails(response.result.value as! [String : AnyObject])
+                {
+                    let APIresponseObj = APIResponse()
+                    APIresponseObj.mParseSubCategoryDetails(response.result.value as! [String : AnyObject])
+                }
+                else
+                {
+                    print("Error")
+                }
+        }
+    }
+    
+    //method to fetch search details list
+    func mFetchSearchDetails(keyword : String)  {
+        Alamofire.request(.GET, "", headers: header)
+            .responseJSON { response in
+                if(response.result.value != nil)
+                {
+                    let APIresponseObj = APIResponse()
+                    APIresponseObj.mParseSubCategoryDetails(response.result.value as! [String : AnyObject])
+                }
+               else
+                {
+                    print("Error")
+                }
         }
     }
     

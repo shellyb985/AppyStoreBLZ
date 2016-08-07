@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="Cjd-cg-aNP">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10117" systemVersion="15G31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="UT2-6F-FPL">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
@@ -129,11 +129,30 @@
                         <outlet property="mHomeButton" destination="16x-Zd-RVr" id="Du1-lC-X7h"/>
                         <outlet property="mSearchButton" destination="xRm-IN-AT2" id="scR-jd-Pc9"/>
                         <outlet property="mVideoButton" destination="wqW-8c-Suy" id="uio-xm-Msr"/>
+                        <segue destination="Cjd-cg-aNP" kind="show" identifier="CategoryToSubCategory" id="Kp3-yl-Wet"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="V30-1E-RL5" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="308" y="-150"/>
+            <point key="canvasLocation" x="282" y="-150"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="Faa-m2-pMs">
+            <objects>
+                <viewController id="Hho-FZ-7in" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="55X-Hv-oWG"/>
+                        <viewControllerLayoutGuide type="bottom" id="d2R-lE-Xa8"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="9YM-8X-PsN">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="EtI-MS-Mgv" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1817" y="-150"/>
         </scene>
         <!--Sub Category View Contoller-->
         <scene sceneID="IPo-r7-i4N">
@@ -278,11 +297,12 @@
                         <outlet property="mHistoryButtonLabel" destination="hKg-ar-HOS" id="KPY-5T-oVa"/>
                         <outlet property="mSearchButtonLabel" destination="xNu-zE-5CT" id="LkO-jM-hVk"/>
                         <outlet property="mVideoButtonLabel" destination="7F9-VN-YMU" id="bsh-aZ-DK3"/>
+                        <segue destination="UT2-6F-FPL" kind="show" identifier="SubCategoryToCategory" id="5pQ-eE-1YA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="tng-lq-4FJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="951" y="-150"/>
+            <point key="canvasLocation" x="1055" y="-150"/>
         </scene>
     </scenes>
 </document>
